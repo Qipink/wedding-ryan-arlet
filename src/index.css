@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,100..900;1,100..900&family=Be+Vietnam+Pro:ital,wght@0,100..900;1,100..900&family=Dancing+Script:wght@400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Patrick+Hand&family=Alice&family=Milonga&family=Cherry+Swash&family=Modern+Antiqua&family=Schoolbell&family=Neucha&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
+  --font-epilogue: "Epilogue", sans-serif;
+  --font-script: "Dancing Script", cursive;
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-hand: "Patrick Hand", cursive;
+  --font-hangyaboly: "Milonga", "Cherry Swash", "Modern Antiqua", serif;
+  --font-alice: "Alice", Georgia, serif;
+  --font-canva-student: "Patrick Hand", "Schoolbell", "Neucha", cursive;
+  
+  --color-brand-bg: #e8b0b5;
+  --color-brand-text: #591a22;
+  --color-brand-primary: #591a22;
+  --color-brand-primary-dark: #3f1015;
+  --color-brand-secondary: #8b3a43;
+  --color-brand-secondary-fixed: #f7dee1;
+  --color-brand-secondary-dim: #ebd0d3;
+  --color-brand-tertiary: #591a22;
+  --color-brand-outline: #8f5d62;
+  --color-brand-outline-variant: #d39ba0;
+  --color-brand-surface-container: #fad5d8;
+  --color-brand-surface-container-low: #fdf3f4;
+  --color-brand-surface-container-high: #ebd0d3;
+  --color-brand-surface-container-highest: #dfb9bc;
+}
+
+html {
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Custom whimsical styles matching the original design */
+.checkerboard-divider {
+  background-image: linear-gradient(45deg, #e5e6b5 25%, transparent 25%), linear-gradient(-45deg, #e5e6b5 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e5e6b5 75%), linear-gradient(-45deg, transparent 75%, #e5e6b5 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+.whimsical-border {
+  border: 2px solid #818263;
+  box-shadow: 4px 4px 0px #c2c395;
+}
+
+.hand-drawn-frame {
+  border: 1px dashed #818263;
+  padding: 8px;
+  background: #ffffff;
+}
+
+.hand-drawn-border {
+  border: 2px solid #818263;
+  border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+}
+
+.scribble-line {
+  background-image: repeating-linear-gradient(90deg, #c2c395 0, #c2c395 2px, transparent 2px, transparent 4px);
+  height: 2px;
+  width: 100%;
+}
+
+.custom-dashed-border {
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23818263' stroke-width='2' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+}
+
+.doodle-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(2deg); }
+}
+
+.doodle-pulse {
+  animation: pulse-slow 4s ease-in-out infinite;
+}
+
+@keyframes pulse-slow {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+/* Falling particles keyframe animations for whimsical wedding theme */
+@keyframes fall-sway-right {
+  0% {
+    transform: translateY(-20px) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.75;
+  }
+  90% {
+    opacity: 0.75;
+  }
+  100% {
+    transform: translateY(105vh) translateX(120px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes fall-sway-left {
+  0% {
+    transform: translateY(-20px) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.65;
+  }
+  90% {
+    opacity: 0.65;
+  }
+  100% {
+    transform: translateY(105vh) translateX(-120px) rotate(-360deg);
+    opacity: 0;
+  }
+}
+
+.animate-fall-right {
+  animation: fall-sway-right linear infinite;
+  will-change: transform, opacity;
+}
+
+.animate-fall-left {
+  animation: fall-sway-left linear infinite;
+  will-change: transform, opacity;
+}
+

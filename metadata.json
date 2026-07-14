@@ -1,0 +1,6 @@
+{
+  "name": "Ryan & Arbaletta Wedding Invitation",
+  "description": "A whimsical, hand-drawn digital wedding invitation, details card, RSVP form, and interactive well-wishes guestbook.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
