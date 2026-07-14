@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { CountdownTime } from "../types";
+import { CountdownTime } from "../../types";
 import { motion } from "motion/react";
 
 export default function Countdown() {

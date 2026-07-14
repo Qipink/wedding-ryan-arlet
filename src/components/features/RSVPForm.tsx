@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { rsvpService } from "../utils/storage";
+import { rsvpService } from "../../utils/storage";
 import { Check, Heart, MailCheck, UserCheck, AlertCircle } from "lucide-react";
 import { motion } from "motion/react";
 

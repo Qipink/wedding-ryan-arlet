@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { wishService } from "../utils/storage";
-import { Wish } from "../types";
+import { wishService } from "../../utils/storage";
+import { Wish } from "../../types";
 import { Heart, Send, Search, CheckCircle, Quote } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
