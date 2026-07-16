@@ -7,7 +7,8 @@ export interface GalleryImage {
   desc: string;
 }
 
-const BASE_URL = "https://mygmaslqyhxrtcabucrm.supabase.co/storage/v1/object/public/image";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const BASE_URL = `${supabaseUrl}/storage/v1/object/public/image`;
 
 export const galleryImages: GalleryImage[] = [
   // --- Kategori: Duo Blue (6 Items) ---

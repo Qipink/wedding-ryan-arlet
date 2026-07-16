@@ -1,9 +1,15 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { useState, useRef, useEffect } from "react";
 import { Check } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function DresscodeSection() {
   const [selectedDressColor, setSelectedDressColor] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
 
   const dresscodeColors = [
     { name: "Sage Green", value: "#818263", desc: "Warna utama sage green yang memberikan nuansa asri, sejuk, dan alami." },
@@ -12,13 +18,23 @@ export default function DresscodeSection() {
     { name: "Warm Cream", value: "#f0eee0", desc: "Warna krem pastel yang netral, cerah, dan menenangkan." },
   ];
 
+  useGSAP(() => {
+    gsap.fromTo(containerRef.current,
+      { opacity: 0, y: 40 },
+      { opacity: 1, y: 0, duration: 0.8, ease: "easeOut", scrollTrigger: { trigger: containerRef.current, start: "top 85%" } }
+    );
+  }, { scope: containerRef });
+
+  useEffect(() => {
+    if (selectedDressColor && tooltipRef.current) {
+      gsap.fromTo(tooltipRef.current, { opacity: 0, y: -5 }, { opacity: 1, y: 0, duration: 0.3 });
+    }
+  }, [selectedDressColor]);
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      className="mt-12 text-center px-6 py-8 bg-brand-surface-container-highest/30 rounded-3xl border border-dashed border-brand-outline-variant"
+    <div
+      ref={containerRef}
+      className="mt-12 text-center px-6 py-8 bg-brand-surface-container-highest/30 rounded-3xl border border-dashed border-brand-outline-variant opacity-0"
     >
       <span className="text-2xl mb-2 block">👗</span>
       <h3 className="font-epilogue text-lg font-bold text-brand-primary mb-3">
@@ -46,12 +62,10 @@ export default function DresscodeSection() {
         ))}
       </div>
 
-      <AnimatePresence mode="wait">
+      <div className="min-h-[80px]">
         {selectedDressColor ? (
-          <motion.div
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -5 }}
+          <div
+            ref={tooltipRef}
             className="bg-white p-3.5 rounded-xl border border-brand-outline-variant/40 max-w-sm mx-auto text-left shadow-sm"
           >
             <p className="font-sans text-xs font-bold text-brand-primary-dark mb-1 flex items-center gap-1.5">
@@ -64,13 +78,13 @@ export default function DresscodeSection() {
             <p className="font-sans text-[11px] text-brand-outline leading-relaxed">
               {dresscodeColors.find((c) => c.name === selectedDressColor)?.desc}
             </p>
-          </motion.div>
+          </div>
         ) : (
-          <p className="font-sans text-[10px] text-brand-outline-variant italic">
+          <p className="font-sans text-[10px] text-brand-outline-variant italic mt-4">
             *Klik salah satu warna di atas untuk tips panduan berbusana
           </p>
         )}
-      </AnimatePresence>
-    </motion.div>
+      </div>
+    </div>
   );
 }

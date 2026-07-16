@@ -1,6 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { CountdownTime } from "../../types";
-import { motion } from "motion/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Countdown() {
   const targetDate = new Date("2026-09-26T08:00:00").getTime();
@@ -11,6 +15,9 @@ export default function Countdown() {
     seconds: 0,
     isOver: false,
   });
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const blockRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const calculateTime = () => {
@@ -38,6 +45,20 @@ export default function Countdown() {
     return () => clearInterval(interval);
   }, [targetDate]);
 
+  useGSAP(() => {
+    gsap.fromTo(containerRef.current,
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 0.8, scrollTrigger: { trigger: containerRef.current, start: "top 85%" } }
+    );
+    
+    if (blockRefs.current.length > 0) {
+      gsap.fromTo(blockRefs.current,
+        { opacity: 0, scale: 0.8 },
+        { opacity: 1, scale: 1, duration: 0.5, stagger: 0.1, ease: "easeOut", scrollTrigger: { trigger: containerRef.current, start: "top 85%" } }
+      );
+    }
+  }, { scope: containerRef });
+
   const timeBlocks = [
     { label: "Hari", value: timeLeft.days },
     { label: "Jam", value: timeLeft.hours },
@@ -46,12 +67,9 @@ export default function Countdown() {
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.8 }}
-      className="flex flex-col items-center justify-center my-10 px-4"
+    <div
+      ref={containerRef}
+      className="flex flex-col items-center justify-center my-10 px-4 opacity-0"
     >
       <div className="text-center mb-6">
         <span className="font-sans text-xs font-semibold tracking-widest text-brand-primary uppercase">
@@ -60,13 +78,10 @@ export default function Countdown() {
       </div>
       <div className="flex gap-4 sm:gap-6 justify-center flex-wrap">
         {timeBlocks.map((block, index) => (
-          <motion.div
+          <div
             key={block.label}
-            initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
-            className="w-18 h-18 sm:w-22 sm:h-22 bg-brand-surface-container-low flex flex-col items-center justify-center hand-drawn-border relative shadow-sm"
+            ref={el => { blockRefs.current[index] = el; }}
+            className="w-18 h-18 sm:w-22 sm:h-22 bg-brand-surface-container-low flex flex-col items-center justify-center hand-drawn-border relative shadow-sm opacity-0"
           >
             <span className="font-epilogue text-2xl sm:text-3xl font-bold text-brand-primary">
               {String(block.value).padStart(2, "0")}
@@ -74,18 +89,14 @@ export default function Countdown() {
             <span className="font-sans text-[10px] uppercase tracking-widest text-brand-outline-variant mt-1 font-semibold">
               {block.label}
             </span>
-          </motion.div>
+          </div>
         ))}
       </div>
       {timeLeft.isOver && (
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mt-4 font-script text-2xl text-brand-secondary italic"
-        >
+        <p className="mt-4 font-script text-2xl text-brand-secondary italic">
           Hari Bahagia Telah Tiba!
-        </motion.p>
+        </p>
       )}
-    </motion.div>
+    </div>
   );
 }

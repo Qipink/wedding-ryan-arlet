@@ -1,7 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { rsvpService } from "../../utils/storage";
 import { Check, MailCheck, AlertCircle } from "lucide-react";
-import { motion } from "motion/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function RSVPForm() {
   const [name, setName] = useState("");
@@ -12,6 +16,9 @@ export default function RSVPForm() {
   const [error, setError] = useState("");
   const [userRsvp, setUserRsvp] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const containerRef = useRef<HTMLDivElement>(null);
+  const successRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Check if the user has already RSVP'd on this device
@@ -24,6 +31,19 @@ export default function RSVPForm() {
     };
     checkExisting();
   }, []);
+
+  useGSAP(() => {
+    gsap.fromTo(containerRef.current,
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 0.8, scrollTrigger: { trigger: containerRef.current, start: "top 85%" } }
+    );
+  }, { scope: containerRef });
+  
+  useEffect(() => {
+    if (isSubmitted && userRsvp && successRef.current) {
+      gsap.fromTo(successRef.current, { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.5 });
+    }
+  }, [isSubmitted, userRsvp]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,12 +88,9 @@ export default function RSVPForm() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.8 }}
-      className="hand-drawn-border bg-brand-surface-container-low p-6 sm:p-10 relative mb-16 shadow-sm overflow-hidden"
+    <div
+      ref={containerRef}
+      className="hand-drawn-border bg-brand-surface-container-low p-6 sm:p-10 relative mb-16 shadow-sm overflow-hidden opacity-0"
     >
       {/* Decorative Stamp/Sticker Illustration */}
       <div className="absolute -right-6 -top-6 hidden sm:block rotate-12 opacity-90 select-none pointer-events-none">
@@ -86,10 +103,9 @@ export default function RSVPForm() {
       </div>
 
       {isSubmitted && userRsvp ? (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="text-center py-8 px-4 flex flex-col items-center"
+        <div
+          ref={successRef}
+          className="text-center py-8 px-4 flex flex-col items-center opacity-0"
         >
           <div className="w-16 h-16 rounded-full bg-brand-primary/15 flex items-center justify-center text-brand-primary mb-4 animate-bounce">
             <MailCheck className="w-8 h-8 text-brand-primary" />
@@ -130,7 +146,7 @@ export default function RSVPForm() {
           >
             Ubah Konfirmasi Kehadiran
           </button>
-        </motion.div>
+        </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
@@ -243,6 +259,6 @@ export default function RSVPForm() {
           </div>
         </form>
       )}
-    </motion.div>
+    </div>
   );
 }

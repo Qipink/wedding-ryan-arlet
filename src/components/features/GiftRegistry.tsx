@@ -1,6 +1,10 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Gift, Copy, Check, Heart } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface AccountCard {
   bankName: string;
@@ -12,6 +16,9 @@ interface AccountCard {
 export default function GiftRegistry() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [showGiftRegistry, setShowGiftRegistry] = useState(false);
+
+  const containerRef = useRef<HTMLElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
   const accounts: AccountCard[] = [
     {
@@ -34,13 +41,23 @@ export default function GiftRegistry() {
     }, 2000);
   };
 
+  useGSAP(() => {
+    gsap.fromTo(containerRef.current,
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 0.8, scrollTrigger: { trigger: containerRef.current, start: "top 85%" } }
+    );
+  }, { scope: containerRef });
+
+  useEffect(() => {
+    if (showGiftRegistry && listRef.current) {
+      gsap.fromTo(listRef.current, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.5 });
+    }
+  }, [showGiftRegistry]);
+
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.8 }}
-      className="py-12 mt-16 text-center border-t border-b border-dashed border-brand-outline-variant relative"
+    <section
+      ref={containerRef}
+      className="py-12 mt-16 text-center border-t border-b border-dashed border-brand-outline-variant relative opacity-0"
     >
       <div className="absolute top-2 left-2 text-brand-secondary/30 doodle-float">
         <Heart className="w-8 h-8 fill-brand-secondary" />
@@ -66,15 +83,14 @@ export default function GiftRegistry() {
           Tampilkan Rekening
         </button>
       ) : (
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-lg mx-auto px-4 mt-6"
+        <div
+          ref={listRef}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-lg mx-auto px-4 mt-6 opacity-0"
         >
           {accounts.map((acc) => (
             <div
               key={acc.accountNumber}
-              className="bg-brand-surface-container-low border-2 border-brand-primary rounded-2xl p-6 relative flex flex-col justify-between text-left shadow-sm hover:rotate-1 transition-all duration-300"
+              className="bg-brand-surface-container-low border-2 border-brand-primary rounded-2xl p-6 relative flex flex-col justify-between text-left shadow-sm hover:rotate-1 transition-all duration-300 overflow-hidden"
             >
               <div className="flex justify-between items-start mb-6">
                 <div>
@@ -108,7 +124,7 @@ export default function GiftRegistry() {
 
                 <button
                   onClick={() => handleCopy(acc.accountNumber)}
-                  className="bg-white hover:bg-brand-secondary-fixed text-brand-primary p-2.5 rounded-lg border border-brand-primary-dark flex items-center justify-center transition-all cursor-pointer shadow-sm active:scale-95"
+                  className="bg-white hover:bg-brand-secondary-fixed text-brand-primary p-2.5 rounded-lg border border-brand-primary-dark flex items-center justify-center transition-all cursor-pointer shadow-sm active:scale-95 z-10"
                   title="Salin No Rekening"
                 >
                   {copiedId === acc.accountNumber ? (
@@ -119,28 +135,21 @@ export default function GiftRegistry() {
                 </button>
               </div>
 
-              <AnimatePresence>
-                {copiedId === acc.accountNumber && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    className="absolute inset-0 bg-brand-primary/95 rounded-2xl flex flex-col items-center justify-center text-center p-4 text-white"
-                  >
-                    <Check className="w-8 h-8 text-white mb-2" />
-                    <span className="font-sans text-xs tracking-wider uppercase font-bold">
-                      Nomor Rekening Disalin!
-                    </span>
-                    <span className="font-sans text-[10px] text-white/80 mt-1">
-                      Terima kasih atas tanda kasih Anda.
-                    </span>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {copiedId === acc.accountNumber && (
+                <div className="absolute inset-0 bg-brand-primary/95 flex flex-col items-center justify-center text-center p-4 text-white z-20 animate-in fade-in zoom-in duration-200">
+                  <Check className="w-8 h-8 text-white mb-2 animate-bounce" />
+                  <span className="font-sans text-xs tracking-wider uppercase font-bold">
+                    Nomor Rekening Disalin!
+                  </span>
+                  <span className="font-sans text-[10px] text-white/80 mt-1">
+                    Terima kasih atas tanda kasih Anda.
+                  </span>
+                </div>
+              )}
             </div>
           ))}
-        </motion.div>
+        </div>
       )}
-    </motion.section>
+    </section>
   );
 }

@@ -1,10 +1,37 @@
-import { motion } from "motion/react";
+import { useRef } from "react";
 import { Heart } from "lucide-react";
 import { galleryImages } from "../../utils/galleryData";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function MempelaiSection() {
+  const containerRef = useRef<HTMLElement>(null);
+  const quoteRef = useRef<HTMLDivElement>(null);
+  const groomRef = useRef<HTMLDivElement>(null);
+  const brideRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    gsap.fromTo(quoteRef.current,
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 1, scrollTrigger: { trigger: quoteRef.current, start: "top 85%" } }
+    );
+    
+    gsap.fromTo(groomRef.current,
+      { opacity: 0, x: -30 },
+      { opacity: 1, x: 0, duration: 0.8, scrollTrigger: { trigger: groomRef.current, start: "top 85%" } }
+    );
+    
+    gsap.fromTo(brideRef.current,
+      { opacity: 0, x: 30 },
+      { opacity: 1, x: 0, duration: 0.8, scrollTrigger: { trigger: brideRef.current, start: "top 85%" } }
+    );
+  }, { scope: containerRef });
+
   return (
-    <section className="py-20 px-6 max-w-4xl mx-auto text-center relative overflow-hidden border-t border-brand-outline-variant/20" id="mempelai">
+    <section ref={containerRef} className="py-20 px-6 max-w-4xl mx-auto text-center relative overflow-hidden border-t border-brand-outline-variant/20" id="mempelai">
       {/* Decorative floral illustration background elements */}
       <div className="absolute top-10 left-4 text-brand-secondary/30 select-none pointer-events-none text-7xl font-script">
         🌸
@@ -15,12 +42,9 @@ export default function MempelaiSection() {
 
       <div className="space-y-12 relative z-10">
         {/* Marriage Quote Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
-          className="max-w-2xl mx-auto space-y-4"
+        <div
+          ref={quoteRef}
+          className="max-w-2xl mx-auto space-y-4 opacity-0"
         >
           <span className="text-brand-primary font-serif italic text-lg block">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</span>
           <p className="text-brand-text/90 font-serif italic text-sm sm:text-base leading-relaxed">
@@ -34,7 +58,7 @@ export default function MempelaiSection() {
             <Heart size={14} className="text-brand-secondary fill-brand-secondary" />
             <div className="h-[1px] w-12 bg-brand-outline-variant"></div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Intoduction Header */}
         <div className="space-y-2">
@@ -49,12 +73,9 @@ export default function MempelaiSection() {
         {/* Bride & Groom Detail Cards */}
         <div className="grid md:grid-cols-2 gap-12 pt-8 relative">
           {/* Groom Details */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="flex flex-col items-center space-y-4"
+          <div
+            ref={groomRef}
+            className="flex flex-col items-center space-y-4 opacity-0"
           >
             {/* Groom Portrait Frame */}
             <div className="relative group">
@@ -87,7 +108,7 @@ export default function MempelaiSection() {
               </div>
               <p className="text-xs text-brand-outline-variant italic">Asal: Bandung, Jawa Barat</p>
             </div>
-          </motion.div>
+          </div>
 
           {/* Decorative central heart & separator line */}
           <div className="hidden md:flex flex-col items-center justify-center absolute left-1/2 top-12 bottom-12 -translate-x-1/2 text-brand-secondary">
@@ -97,12 +118,9 @@ export default function MempelaiSection() {
           </div>
 
           {/* Bride Details */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="flex flex-col items-center space-y-4"
+          <div
+            ref={brideRef}
+            className="flex flex-col items-center space-y-4 opacity-0"
           >
             {/* Bride Portrait Frame */}
             <div className="relative group">
@@ -135,7 +153,7 @@ export default function MempelaiSection() {
               </div>
               <p className="text-xs text-brand-outline-variant italic">Asal: Jakarta Selatan, DKI Jakarta</p>
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>

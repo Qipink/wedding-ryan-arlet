@@ -1,5 +1,9 @@
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface ParallaxImageProps {
   src: string;
@@ -15,27 +19,36 @@ export default function ParallaxImage({
   aspectClass = "aspect-square"
 }: ParallaxImageProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
 
-  // Track the scroll of the image container as it passes through the viewport
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  });
+  useGSAP(() => {
+    if (!containerRef.current || !imageRef.current) return;
 
-  // Transform scroll progress to vertical position translation (-10% to 10%)
-  // The scale-[1.2] on the image ensures there's enough overflow so we don't see empty space
-  const y = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
+    gsap.fromTo(imageRef.current,
+      { y: "-10%" },
+      {
+        y: "10%",
+        ease: "none",
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true
+        }
+      }
+    );
+  }, { scope: containerRef });
 
   return (
     <div
       ref={containerRef}
       className={`overflow-hidden relative rounded-lg ${aspectClass} ${className}`}
     >
-      <motion.img
+      <img
+        ref={imageRef}
         src={src}
         alt={alt}
         className="absolute top-0 left-0 w-full h-full object-cover scale-[1.22] origin-center"
-        style={{ y }}
         referrerPolicy="no-referrer"
       />
     </div>

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 import { Heart } from "lucide-react";
 
 import CoverScreen from "../components/layout/CoverScreen";
@@ -31,8 +32,16 @@ export default function App() {
   const isScrollingRef = useRef(false);
   const timeoutRef = useRef<any>(null);
   
+  const mainContainerRef = useRef<HTMLDivElement>(null);
+
   // Interactive Lightbox Gallery state
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  useGSAP(() => {
+    if (isUnlocked && mainContainerRef.current) {
+      gsap.fromTo(mainContainerRef.current, { opacity: 0 }, { opacity: 1, duration: 1 });
+    }
+  }, [isUnlocked]);
 
   // Scroll spy effect using a robust scroll event listener
   useEffect(() => {
@@ -122,13 +131,8 @@ export default function App() {
       <BackgroundMusic playTrigger={musicTrigger} />
 
       {/* Main Container */}
-      <AnimatePresence>
-        {isUnlocked && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1 }}
-          >
+      {isUnlocked && (
+        <div ref={mainContainerRef} style={{ opacity: 0 }}>
             {/* Whimsical Falling Particles Background */}
             <FallingParticles />
 
@@ -199,9 +203,8 @@ export default function App() {
             <div className="w-full h-6 checkerboard-divider opacity-15"></div>
 
             <FooterSection />
-          </motion.div>
-        )}
-      </AnimatePresence>
+        </div>
+      )}
 
       {/* FULL SCREEN PHOTO LIGHTBOX PREVIEWER */}
       <Lightbox lightboxIndex={lightboxIndex} setLightboxIndex={setLightboxIndex} />

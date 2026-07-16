@@ -1,8 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { wishService } from "../../utils/storage";
 import { Wish } from "../../types";
 import { Heart, Send, Search, CheckCircle, Quote } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function WishBoard() {
   const [wishes, setWishes] = useState<Wish[]>([]);
@@ -13,6 +17,11 @@ export default function WishBoard() {
   const [statusMsg, setStatusMsg] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchWishes = async () => {
@@ -28,6 +37,18 @@ export default function WishBoard() {
     };
     fetchWishes();
   }, []);
+
+  useGSAP(() => {
+    gsap.fromTo(headerRef.current,
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 0.8, scrollTrigger: { trigger: headerRef.current, start: "top 85%" } }
+    );
+    
+    gsap.fromTo(formRef.current,
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 0.8, delay: 0.1, scrollTrigger: { trigger: formRef.current, start: "top 85%" } }
+    );
+  }, { scope: containerRef });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,18 +106,15 @@ export default function WishBoard() {
   const displayedWishes = showAll ? filteredWishes : filteredWishes.slice(0, 4);
 
   return (
-    <div className="relative mt-16 text-center scroll-mt-24" id="wish">
+    <div ref={containerRef} className="relative mt-16 text-center scroll-mt-24" id="wish">
       {/* Small floating flower doodle */}
       <div className="absolute -top-6 right-2 text-brand-secondary/40 doodle-float z-0">
         <span className="text-4xl">✿</span>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.8 }}
-        className="mb-10 text-center"
+      <div
+        ref={headerRef}
+        className="mb-10 text-center opacity-0"
       >
         <div className="flex justify-center mb-2">
           <Heart className="w-8 h-8 text-brand-primary fill-brand-primary/10 doodle-pulse" />
@@ -107,16 +125,13 @@ export default function WishBoard() {
         <p className="font-sans text-xs text-brand-outline mt-1.5 uppercase tracking-widest">
           Berikan doa tulus untuk Ryan & Arbaletta
         </p>
-      </motion.div>
+      </div>
 
       <div className="space-y-8 max-w-2xl mx-auto px-1">
         {/* Wish Input Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.8, delay: 0.1 }}
-          className="custom-dashed-border p-6 sm:p-8 bg-brand-surface-container text-left relative shadow-sm"
+        <div
+          ref={formRef}
+          className="custom-dashed-border p-6 sm:p-8 bg-brand-surface-container text-left relative shadow-sm opacity-0"
         >
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <input
@@ -154,7 +169,7 @@ export default function WishBoard() {
               </button>
             </div>
           </form>
-        </motion.div>
+        </div>
 
         {/* Search Bar */}
         <div className="flex items-center gap-2 max-w-md mx-auto bg-white border border-brand-outline-variant/50 rounded-full px-4 py-2 shadow-sm focus-within:border-brand-primary transition-all">
@@ -189,69 +204,58 @@ export default function WishBoard() {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-start mt-8">
-            <AnimatePresence mode="popLayout">
-              {displayedWishes.map((wish, index) => {
-                // Alternating rotation and colors
-                const rotationClass = index % 2 === 0 ? "rotate-[-1deg]" : "rotate-[1deg]";
-                const bgClass = index % 3 === 0
-                  ? "bg-brand-secondary-fixed/20 hover:bg-brand-secondary-fixed/30"
-                  : index % 3 === 1
-                    ? "bg-brand-surface-container-high/45 hover:bg-brand-surface-container-high/65"
-                    : "bg-brand-surface-container-low/70 hover:bg-brand-surface-container-low/90";
+          <div ref={listRef} className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-start mt-8">
+            {displayedWishes.map((wish, index) => {
+              // Alternating rotation and colors
+              const rotationClass = index % 2 === 0 ? "rotate-[-1deg]" : "rotate-[1deg]";
+              const bgClass = index % 3 === 0
+                ? "bg-brand-secondary-fixed/20 hover:bg-brand-secondary-fixed/30"
+                : index % 3 === 1
+                  ? "bg-brand-surface-container-high/45 hover:bg-brand-surface-container-high/65"
+                  : "bg-brand-surface-container-low/70 hover:bg-brand-surface-container-low/90";
 
-                return (
-                  <motion.div
-                    key={wish.id}
-                    layout
-                    initial={{ opacity: 0, y: 15, scale: 0.96 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -10, scale: 0.96 }}
-                    transition={{
-                      duration: 0.5,
-                      ease: [0.16, 1, 0.3, 1], // Custom ultra-smooth cubic bezier
-                      layout: { type: "spring", stiffness: 180, damping: 25 }
-                    }}
-                    className={`p-5 rounded-2xl hand-drawn-border flex flex-col justify-between gap-4 text-left transition-all duration-300 relative ${rotationClass} ${bgClass}`}
-                  >
-                    <div className="absolute top-3 right-4 opacity-5 pointer-events-none">
-                      <Quote className="w-12 h-12 text-brand-primary" />
-                    </div>
+              return (
+                <div
+                  key={wish.id}
+                  className={`p-5 rounded-2xl hand-drawn-border flex flex-col justify-between gap-4 text-left transition-all duration-300 relative ${rotationClass} ${bgClass} transform hover:-translate-y-1 hover:shadow-md`}
+                >
+                  <div className="absolute top-3 right-4 opacity-5 pointer-events-none">
+                    <Quote className="w-12 h-12 text-brand-primary" />
+                  </div>
 
-                    <div>
-                      <div className="flex items-center gap-2 border-b border-brand-outline-variant/20 pb-2 mb-2">
-                        <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center text-[10px] shadow-sm">
-                          🌸
-                        </div>
-                        <span className="font-epilogue text-sm font-bold text-brand-primary-dark">
-                          {wish.name}
-                        </span>
+                  <div>
+                    <div className="flex items-center gap-2 border-b border-brand-outline-variant/20 pb-2 mb-2">
+                      <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center text-[10px] shadow-sm">
+                        🌸
                       </div>
-                      <p className="font-sans text-xs italic text-brand-text/80 leading-relaxed">
-                        "{wish.message}"
-                      </p>
-                    </div>
-
-                    <div className="flex justify-between items-center mt-3 pt-2 border-t border-brand-outline-variant/10">
-                      <span className="text-[10px] uppercase font-sans tracking-wider text-brand-outline">
-                        {formatDate(wish.createdAt)}
+                      <span className="font-epilogue text-sm font-bold text-brand-primary-dark">
+                        {wish.name}
                       </span>
-
-                      <button
-                        onClick={() => handleLike(wish.id)}
-                        className={`flex items-center gap-1 text-xs px-2.5 py-1 rounded-full border border-brand-outline-variant/30 bg-white shadow-sm transition-all active:scale-90 cursor-pointer ${wish.likedByCurrentUser
-                            ? "text-red-500 font-bold border-red-200"
-                            : "text-brand-outline-variant hover:text-red-400"
-                          }`}
-                      >
-                        <Heart className={`w-3 h-3 ${wish.likedByCurrentUser ? "fill-red-500 text-red-500" : ""}`} />
-                        <span>{wish.likes}</span>
-                      </button>
                     </div>
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
+                    <p className="font-sans text-xs italic text-brand-text/80 leading-relaxed">
+                      "{wish.message}"
+                    </p>
+                  </div>
+
+                  <div className="flex justify-between items-center mt-3 pt-2 border-t border-brand-outline-variant/10">
+                    <span className="text-[10px] uppercase font-sans tracking-wider text-brand-outline">
+                      {formatDate(wish.createdAt)}
+                    </span>
+
+                    <button
+                      onClick={() => handleLike(wish.id)}
+                      className={`flex items-center gap-1 text-xs px-2.5 py-1 rounded-full border border-brand-outline-variant/30 bg-white shadow-sm transition-all active:scale-90 cursor-pointer ${wish.likedByCurrentUser
+                          ? "text-red-500 font-bold border-red-200"
+                          : "text-brand-outline-variant hover:text-red-400"
+                        }`}
+                    >
+                      <Heart className={`w-3 h-3 ${wish.likedByCurrentUser ? "fill-red-500 text-red-500" : ""}`} />
+                      <span>{wish.likes}</span>
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
 

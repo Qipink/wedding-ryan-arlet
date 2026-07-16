@@ -1,16 +1,34 @@
-import { motion } from "motion/react";
+import { useRef } from "react";
 import { Sparkles, Calendar, Clock, MapPin } from "lucide-react";
 import MapProviderSelector from "../ui/MapProviderSelector";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function DetailAcaraSection() {
+  const containerRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    gsap.fromTo(headerRef.current,
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 0.8, scrollTrigger: { trigger: headerRef.current, start: "top 85%" } }
+    );
+    
+    gsap.fromTo(cardRef.current,
+      { opacity: 0, y: 40 },
+      { opacity: 1, y: 0, duration: 0.8, ease: "easeOut", scrollTrigger: { trigger: cardRef.current, start: "top 85%" } }
+    );
+  }, { scope: containerRef });
+
   return (
-    <section className="py-16 scroll-mt-24 px-4 sm:px-6 relative" id="acara">
-      <motion.header
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.8 }}
-        className="text-center mb-12"
+    <section ref={containerRef} className="py-16 scroll-mt-24 px-4 sm:px-6 relative" id="acara">
+      <header
+        ref={headerRef}
+        className="text-center mb-12 opacity-0"
       >
         <div className="flex justify-center mb-3">
           <Sparkles className="w-6 h-6 text-brand-secondary animate-pulse" />
@@ -21,15 +39,12 @@ export default function DetailAcaraSection() {
         <p className="font-sans text-xs text-brand-outline tracking-wider uppercase mt-1">
           Pelaksanaan Ibadah & Syukuran Pernikahan
         </p>
-      </motion.header>
+      </header>
 
       <div className="max-w-2xl mx-auto px-1 sm:px-0">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative bg-brand-surface-container-low border-2 border-brand-primary rounded-3xl p-5 sm:p-8 transition-all shadow-sm hover:shadow-md"
+        <div
+          ref={cardRef}
+          className="relative bg-brand-surface-container-low border-2 border-brand-primary rounded-3xl p-5 sm:p-8 transition-all shadow-sm hover:shadow-md opacity-0"
         >
           {/* Decorative Top Floating Icons */}
           <div className="absolute -top-5 -left-5 w-12 h-12 bg-brand-secondary-fixed rounded-full flex items-center justify-center text-brand-primary shadow-sm font-bold border-2 border-white z-10">
@@ -122,7 +137,7 @@ export default function DetailAcaraSection() {
               </span>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

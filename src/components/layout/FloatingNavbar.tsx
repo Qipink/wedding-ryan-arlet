@@ -1,4 +1,3 @@
-import { motion } from "motion/react";
 import { Home, Calendar, Image as ImageIcon, Mail, MessageSquare } from "lucide-react";
 
 interface FloatingNavbarProps {
@@ -35,20 +34,16 @@ export default function FloatingNavbar({ activeTab, scrollToSection }: FloatingN
               <Icon className="w-5 h-5 stroke-[2.2px] relative z-10" />
               
               {isActive && (
-                <motion.span
-                  layoutId="activeTabPill"
-                  className="absolute inset-0 rounded-full bg-brand-primary"
+                <span
+                  className="absolute inset-0 rounded-full bg-brand-primary transition-all duration-300"
                   style={{ zIndex: 5 }}
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
                 />
               )}
               
               {isActive && (
-                <motion.span
-                  layoutId="activeTabDot"
-                  className="absolute bottom-1 w-1 h-1 rounded-full bg-white"
+                <span
+                  className="absolute bottom-1 w-1 h-1 rounded-full bg-white transition-all duration-300"
                   style={{ zIndex: 10 }}
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
                 />
               )}
 

@@ -86,7 +86,7 @@ export const rsvpService = {
     if (supabase) {
       try {
         const { data, error } = await supabase
-          .from("rsvps")
+          .from("t_rsvp")
           .select("*")
           .eq("id", parsedLocal.id)
           .single();
@@ -124,7 +124,7 @@ export const rsvpService = {
 
     if (supabase) {
       try {
-        const { error } = await supabase.from("rsvps").upsert({
+        const { error } = await supabase.from("t_rsvp").upsert({
           id: newRsvp.id,
           name: newRsvp.name,
           guests: newRsvp.guests,
@@ -149,7 +149,7 @@ export const rsvpService = {
     if (localData && supabase) {
       try {
         const parsed = JSON.parse(localData);
-        await supabase.from("rsvps").delete().eq("id", parsed.id);
+        await supabase.from("t_rsvp").delete().eq("id", parsed.id);
       } catch (err) {
         console.error("Failed to delete RSVP from Supabase:", err);
       }
@@ -165,7 +165,7 @@ export const wishService = {
     if (supabase) {
       try {
         const { data, error } = await supabase
-          .from("wishes")
+          .from("t_wish")
           .select("*")
           .order("created_at", { ascending: false });
 
@@ -213,7 +213,7 @@ export const wishService = {
 
     if (supabase) {
       try {
-        const { error } = await supabase.from("wishes").insert({
+        const { error } = await supabase.from("t_wish").insert({
           id: newWish.id,
           name: newWish.name,
           message: newWish.message,
@@ -265,7 +265,7 @@ export const wishService = {
           // Fallback if the custom RPC increment function isn't set up yet:
           // fetch current wish, modify, then update.
           const { data: wishData } = await supabase
-            .from("wishes")
+            .from("t_wish")
             .select("likes")
             .eq("id", wishId)
             .single();
@@ -273,7 +273,7 @@ export const wishService = {
           if (wishData) {
             const currentLikes = wishData.likes;
             await supabase
-              .from("wishes")
+              .from("t_wish")
               .update({ likes: Math.max(0, currentLikes + incrementVal) })
               .eq("id", wishId);
           }

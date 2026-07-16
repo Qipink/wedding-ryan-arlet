@@ -1,10 +1,14 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { useState, useEffect, useRef } from "react";
 import { Heart } from "lucide-react";
 import { galleryImages } from "../../utils/galleryData";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 
 export default function HeroSection() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  const containerRef = useRef<HTMLDivElement>(null);
+  const imagesRef = useRef<(HTMLImageElement | null)[]>([]);
 
   const heroImages = [
     galleryImages[0].url,
@@ -20,14 +24,30 @@ export default function HeroSection() {
       const img = new Image();
       img.src = url;
     });
+  }, [heroImages]);
+
+  useGSAP(() => {
+    // Initial entrance animation
+    gsap.fromTo(containerRef.current,
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 1, ease: "power2.out" }
+    );
   }, []);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+      const nextIndex = (currentImageIndex + 1) % heroImages.length;
+      
+      // Crossfade animation
+      if (imagesRef.current[currentImageIndex] && imagesRef.current[nextIndex]) {
+        gsap.to(imagesRef.current[currentImageIndex], { opacity: 0, duration: 1.5, ease: "power2.inOut" });
+        gsap.to(imagesRef.current[nextIndex], { opacity: 1, duration: 1.5, ease: "power2.inOut" });
+      }
+      
+      setCurrentImageIndex(nextIndex);
     }, 5000);
     return () => clearInterval(timer);
-  }, [heroImages.length]);
+  }, [currentImageIndex, heroImages.length]);
 
   return (
     <section className="min-h-[80vh] flex flex-col items-center justify-center text-center pt-16 pb-20 relative" id="home">
@@ -38,11 +58,9 @@ export default function HeroSection() {
         <Heart className="w-6 h-6 fill-brand-secondary" />
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.0, ease: "easeOut" }}
-        className="w-full flex flex-col items-center"
+      <div
+        ref={containerRef}
+        className="w-full flex flex-col items-center opacity-0"
       >
         <div className="mb-6">
           <span className="font-sans text-[10px] font-semibold text-brand-primary uppercase tracking-[0.3em] block">
@@ -63,20 +81,20 @@ export default function HeroSection() {
         {/* Hero Illustration Stack */}
         <div className="relative w-full max-w-md mb-12 group">
           <div className="absolute inset-0 bg-brand-secondary-fixed/50 rounded-2xl rotate-2 transition-transform group-hover:rotate-1"></div>
-          <div className="relative w-full aspect-[4/5] border-2 border-brand-primary rounded-2xl p-3 bg-white shadow-sm rotate-[-1deg] transition-all hover:rotate-0">
-            <AnimatePresence>
-              <motion.img
-                key={currentImageIndex}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 1.5, ease: "easeInOut" }}
-                alt="Ryan and Arbaletta Wedding"
+          <div className="relative w-full aspect-[4/5] border-2 border-brand-primary rounded-2xl p-3 bg-white shadow-sm rotate-[-1deg] transition-all hover:rotate-0 overflow-hidden">
+            {heroImages.map((src, idx) => (
+              <img
+                key={idx}
+                ref={(el) => {
+                  imagesRef.current[idx] = el;
+                }}
+                alt={`Wedding Photo ${idx}`}
                 className="absolute top-3 left-3 w-[calc(100%-24px)] h-[calc(100%-24px)] object-cover rounded-xl grayscale-[0.1] sepia-[0.1]"
-                src={heroImages[currentImageIndex]}
+                src={src}
+                style={{ opacity: idx === 0 ? 1 : 0 }}
                 referrerPolicy="no-referrer"
               />
-            </AnimatePresence>
+            ))}
           </div>
           {/* Floating hand-drawn stamp */}
           <div className="absolute -bottom-6 -right-4 bg-brand-secondary-fixed p-4 rounded-xl hand-drawn-border rotate-3 shadow-sm select-none z-10">
@@ -98,7 +116,7 @@ export default function HeroSection() {
             <div className="h-[1px] w-10 bg-brand-outline-variant"></div>
           </div>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

@@ -1,8 +1,27 @@
-import { motion } from "motion/react";
+import { useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function MilestoneSection() {
+  const containerRef = useRef<HTMLElement>(null);
+  const milestoneRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useGSAP(() => {
+    milestoneRefs.current.forEach((el) => {
+      if (el) {
+        gsap.fromTo(el,
+          { opacity: 0, y: 40 },
+          { opacity: 1, y: 0, duration: 0.8, ease: "easeOut", scrollTrigger: { trigger: el, start: "top 85%" } }
+        );
+      }
+    });
+  }, { scope: containerRef });
+
   return (
-    <section className="py-16 border-t border-brand-outline-variant/20 text-center">
+    <section ref={containerRef} className="py-16 border-t border-brand-outline-variant/20 text-center">
       <header className="mb-12">
         <span className="text-3xl mb-2 block">🌸</span>
         <h2 className="font-script text-4xl text-brand-primary font-bold">
@@ -20,12 +39,9 @@ export default function MilestoneSection() {
 
         <div className="space-y-12">
           {/* Milestone 1 */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="relative flex flex-col md:flex-row items-start md:justify-between"
+          <div
+            ref={el => { milestoneRefs.current[0] = el; }}
+            className="relative flex flex-col md:flex-row items-start md:justify-between opacity-0"
           >
             <div className="absolute left-6 md:left-1/2 w-8 h-8 rounded-full bg-brand-secondary-fixed border-2 border-brand-primary flex items-center justify-center transform -translate-x-1/2 -mt-1 z-10 shadow-sm">
               <span className="text-xs">🌱</span>
@@ -43,15 +59,12 @@ export default function MilestoneSection() {
               </p>
             </div>
             <div className="hidden md:block w-[45%]"></div>
-          </motion.div>
+          </div>
 
           {/* Milestone 2 */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="relative flex flex-col md:flex-row items-start md:justify-between md:flex-row-reverse"
+          <div
+            ref={el => { milestoneRefs.current[1] = el; }}
+            className="relative flex flex-col md:flex-row items-start md:justify-between md:flex-row-reverse opacity-0"
           >
             <div className="absolute left-6 md:left-1/2 w-8 h-8 rounded-full bg-brand-secondary-fixed border-2 border-brand-primary flex items-center justify-center transform -translate-x-1/2 -mt-1 z-10 shadow-sm">
               <span className="text-xs">🤝</span>
@@ -69,15 +82,12 @@ export default function MilestoneSection() {
               </p>
             </div>
             <div className="hidden md:block w-[45%]"></div>
-          </motion.div>
+          </div>
 
           {/* Milestone 3 */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="relative flex flex-col md:flex-row items-start md:justify-between"
+          <div
+            ref={el => { milestoneRefs.current[2] = el; }}
+            className="relative flex flex-col md:flex-row items-start md:justify-between opacity-0"
           >
             <div className="absolute left-6 md:left-1/2 w-8 h-8 rounded-full bg-brand-secondary-fixed border-2 border-brand-primary flex items-center justify-center transform -translate-x-1/2 -mt-1 z-10 shadow-sm">
               <span className="text-xs">💍</span>
@@ -95,15 +105,12 @@ export default function MilestoneSection() {
               </p>
             </div>
             <div className="hidden md:block w-[45%]"></div>
-          </motion.div>
+          </div>
 
           {/* Milestone 4 */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-60px" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="relative flex flex-col md:flex-row items-start md:justify-between md:flex-row-reverse"
+          <div
+            ref={el => { milestoneRefs.current[3] = el; }}
+            className="relative flex flex-col md:flex-row items-start md:justify-between md:flex-row-reverse opacity-0"
           >
             <div className="absolute left-6 md:left-1/2 w-8 h-8 rounded-full bg-brand-secondary-fixed border-2 border-brand-primary flex items-center justify-center transform -translate-x-1/2 -mt-1 z-10 shadow-sm">
               <span className="text-xs">💖</span>
@@ -121,7 +128,7 @@ export default function MilestoneSection() {
               </p>
             </div>
             <div className="hidden md:block w-[45%]"></div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
