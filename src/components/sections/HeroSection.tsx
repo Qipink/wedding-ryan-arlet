@@ -1,8 +1,34 @@
-import React from "react";
-import { motion } from "motion/react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { Heart } from "lucide-react";
+import { galleryImages } from "../../utils/galleryData";
 
 export default function HeroSection() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const heroImages = [
+    galleryImages[0].url,
+    galleryImages[1].url,
+    galleryImages[8].url,
+    galleryImages[11].url,
+    galleryImages[12].url,
+  ];
+
+  // Preload images to ensure smooth fade transitions
+  useEffect(() => {
+    heroImages.forEach((url) => {
+      const img = new Image();
+      img.src = url;
+    });
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [heroImages.length]);
+
   return (
     <section className="min-h-[80vh] flex flex-col items-center justify-center text-center pt-16 pb-20 relative" id="home">
       <div className="absolute top-4 left-6 text-brand-tertiary doodle-float">
@@ -37,16 +63,23 @@ export default function HeroSection() {
         {/* Hero Illustration Stack */}
         <div className="relative w-full max-w-md mb-12 group">
           <div className="absolute inset-0 bg-brand-secondary-fixed/50 rounded-2xl rotate-2 transition-transform group-hover:rotate-1"></div>
-          <div className="relative border-2 border-brand-primary rounded-2xl p-3 bg-white shadow-sm rotate-[-1deg] transition-all hover:rotate-0">
-            <img
-              alt="Ryan and Arbaletta Wedding Illustration"
-              className="w-full h-auto rounded-xl grayscale-[0.1] sepia-[0.1]"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBKZwGZPLIrwzHSIRaGYB6uKx_2I28OuRqjsfLZzCejtg6PRbnNXEoILMUvFz1qIypGrOyOPz4uanVkRoJCC-lye3o5_dHEhea9mxOGUlWvrMS16BYOBvnzdg5oAlqQx32YLKU51X3dp2nfiSbHNZrhmSirp2feNknM2W25KgmgNLqK9Mo9Qh5FFdCXL1WxOZ72BLseGykNWS6Gq4TVnkKHc3SCFrkX0I8AzV_EvcUvRnGFmmlAFEPCf9bHsBaei4NH4i05Ly4fzs"
-              referrerPolicy="no-referrer"
-            />
+          <div className="relative w-full aspect-[4/5] border-2 border-brand-primary rounded-2xl p-3 bg-white shadow-sm rotate-[-1deg] transition-all hover:rotate-0">
+            <AnimatePresence>
+              <motion.img
+                key={currentImageIndex}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1.5, ease: "easeInOut" }}
+                alt="Ryan and Arbaletta Wedding"
+                className="absolute top-3 left-3 w-[calc(100%-24px)] h-[calc(100%-24px)] object-cover rounded-xl grayscale-[0.1] sepia-[0.1]"
+                src={heroImages[currentImageIndex]}
+                referrerPolicy="no-referrer"
+              />
+            </AnimatePresence>
           </div>
           {/* Floating hand-drawn stamp */}
-          <div className="absolute -bottom-6 -right-4 bg-brand-secondary-fixed p-4 rounded-xl hand-drawn-border rotate-3 shadow-sm select-none">
+          <div className="absolute -bottom-6 -right-4 bg-brand-secondary-fixed p-4 rounded-xl hand-drawn-border rotate-3 shadow-sm select-none z-10">
             <p className="font-epilogue text-brand-primary-dark font-extrabold text-lg">
               26.09.2026
             </p>

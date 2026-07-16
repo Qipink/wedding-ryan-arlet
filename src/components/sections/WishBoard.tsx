@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { wishService } from "../../utils/storage";
 import { Wish } from "../../types";
 import { Heart, Send, Search, CheckCircle, Quote } from "lucide-react";
@@ -41,7 +41,7 @@ export default function WishBoard() {
       await wishService.addWish(name.trim(), message.trim());
       const updatedWishes = await wishService.getWishes();
       setWishes(updatedWishes);
-      
+
       setName("");
       setMessage("");
       setStatusMsg("Ucapan Anda berhasil dikirim!");
@@ -147,9 +147,8 @@ export default function WishBoard() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`bg-brand-primary hover:bg-brand-primary-dark text-white font-sans text-xs uppercase tracking-widest font-bold px-6 py-2.5 rounded-lg border-2 border-brand-primary-dark flex items-center gap-2 cursor-pointer transition-all active:scale-95 ${
-                  isSubmitting ? "opacity-75 cursor-not-allowed" : ""
-                }`}
+                className={`bg-brand-primary hover:bg-brand-primary-dark text-white font-sans text-xs uppercase tracking-widest font-bold px-6 py-2.5 rounded-lg border-2 border-brand-primary-dark flex items-center gap-2 cursor-pointer transition-all active:scale-95 ${isSubmitting ? "opacity-75 cursor-not-allowed" : ""
+                  }`}
               >
                 <Send className="w-3 h-3" /> {isSubmitting ? "Mengirim..." : "Kirim Ucapan"}
               </button>
@@ -195,11 +194,11 @@ export default function WishBoard() {
               {displayedWishes.map((wish, index) => {
                 // Alternating rotation and colors
                 const rotationClass = index % 2 === 0 ? "rotate-[-1deg]" : "rotate-[1deg]";
-                const bgClass = index % 3 === 0 
-                  ? "bg-brand-secondary-fixed/20 hover:bg-brand-secondary-fixed/30" 
-                  : index % 3 === 1 
-                  ? "bg-brand-surface-container-high/45 hover:bg-brand-surface-container-high/65" 
-                  : "bg-brand-surface-container-low/70 hover:bg-brand-surface-container-low/90";
+                const bgClass = index % 3 === 0
+                  ? "bg-brand-secondary-fixed/20 hover:bg-brand-secondary-fixed/30"
+                  : index % 3 === 1
+                    ? "bg-brand-surface-container-high/45 hover:bg-brand-surface-container-high/65"
+                    : "bg-brand-surface-container-low/70 hover:bg-brand-surface-container-low/90";
 
                 return (
                   <motion.div
@@ -208,8 +207,8 @@ export default function WishBoard() {
                     initial={{ opacity: 0, y: 15, scale: 0.96 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.96 }}
-                    transition={{ 
-                      duration: 0.5, 
+                    transition={{
+                      duration: 0.5,
                       ease: [0.16, 1, 0.3, 1], // Custom ultra-smooth cubic bezier
                       layout: { type: "spring", stiffness: 180, damping: 25 }
                     }}
@@ -240,11 +239,10 @@ export default function WishBoard() {
 
                       <button
                         onClick={() => handleLike(wish.id)}
-                        className={`flex items-center gap-1 text-xs px-2.5 py-1 rounded-full border border-brand-outline-variant/30 bg-white shadow-sm transition-all active:scale-90 cursor-pointer ${
-                          wish.likedByCurrentUser 
-                            ? "text-red-500 font-bold border-red-200" 
+                        className={`flex items-center gap-1 text-xs px-2.5 py-1 rounded-full border border-brand-outline-variant/30 bg-white shadow-sm transition-all active:scale-90 cursor-pointer ${wish.likedByCurrentUser
+                            ? "text-red-500 font-bold border-red-200"
                             : "text-brand-outline-variant hover:text-red-400"
-                        }`}
+                          }`}
                       >
                         <Heart className={`w-3 h-3 ${wish.likedByCurrentUser ? "fill-red-500 text-red-500" : ""}`} />
                         <span>{wish.likes}</span>

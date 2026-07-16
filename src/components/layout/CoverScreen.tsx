@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Heart, MailOpen, Calendar, MapPin } from "lucide-react";
+import { MailOpen } from "lucide-react";
 
 interface CoverScreenProps {
   onOpen: () => void;
@@ -28,6 +28,7 @@ export default function CoverScreen({ onOpen }: CoverScreenProps) {
     <AnimatePresence>
       {isOpen && (
         <motion.div
+          suppressHydrationWarning
           initial={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: "-100vh" }}
           transition={{ duration: 0.8, ease: [0.77, 0, 0.175, 1] }}
@@ -42,7 +43,7 @@ export default function CoverScreen({ onOpen }: CoverScreenProps) {
           <div className="w-full h-3 checkerboard-divider opacity-20 absolute top-0 left-0"></div>
 
           {/* Invitation Header */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.8 }}
@@ -54,7 +55,7 @@ export default function CoverScreen({ onOpen }: CoverScreenProps) {
           </motion.div>
 
           {/* Names of Groom & Bride */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
@@ -83,7 +84,7 @@ export default function CoverScreen({ onOpen }: CoverScreenProps) {
           </motion.div>
 
           {/* Guest Greeting Section with clear spacing from the date above */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.8 }}
@@ -95,7 +96,7 @@ export default function CoverScreen({ onOpen }: CoverScreenProps) {
             <h3 className="font-serif text-2xl md:text-3xl font-bold text-brand-primary mb-4 tracking-wide">
               {guestName}
             </h3>
-            
+
             <motion.button
               onClick={handleOpen}
               whileHover={{ scale: 1.05 }}

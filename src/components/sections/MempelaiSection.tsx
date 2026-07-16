@@ -1,91 +1,142 @@
-import React from "react";
 import { motion } from "motion/react";
+import { Heart } from "lucide-react";
 import { galleryImages } from "../../utils/galleryData";
 
 export default function MempelaiSection() {
   return (
-    <section className="py-16 border-t border-brand-outline-variant/20 text-center">
-      <motion.header
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.8 }}
-        className="mb-12"
-      >
-        <span className="text-3xl mb-2 block">🕊</span>
-        <h2 className="font-script text-4xl text-brand-primary font-bold">
-          Mempelai Bahagia
-        </h2>
-        <p className="font-sans text-xs text-brand-outline tracking-wider uppercase mt-1">
-          Memperkenalkan Kedua Mempelai
-        </p>
-        <div className="scribble-line mt-4 max-w-[200px] mx-auto"></div>
-      </motion.header>
+    <section className="py-20 px-6 max-w-4xl mx-auto text-center relative overflow-hidden border-t border-brand-outline-variant/20" id="mempelai">
+      {/* Decorative floral illustration background elements */}
+      <div className="absolute top-10 left-4 text-brand-secondary/30 select-none pointer-events-none text-7xl font-script">
+        🌸
+      </div>
+      <div className="absolute bottom-10 right-4 text-brand-primary/30 select-none pointer-events-none text-7xl font-script">
+        🌿
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mt-8">
-        {/* Groom Profile */}
+      <div className="space-y-12 relative z-10">
+        {/* Marriage Quote Section */}
         <motion.div
-          initial={{ opacity: 0, x: -40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-          className="flex flex-col items-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1 }}
+          className="max-w-2xl mx-auto space-y-4"
         >
-          <div className="relative w-48 h-48 mb-6 group">
-            <div className="absolute inset-0 bg-brand-secondary-fixed/60 rounded-full rotate-3 group-hover:rotate-6 transition-transform"></div>
-            <div className="relative w-48 h-48 rounded-full overflow-hidden border-2 border-brand-primary p-1 bg-white hover:scale-105 transition-transform shadow-sm">
-              <img
-                alt="Ryan Fahri F."
-                className="w-full h-full object-cover rounded-full scale-180"
-                src={galleryImages[17].url}
-                referrerPolicy="no-referrer"
-              />
-            </div>
+          <span className="text-brand-primary font-serif italic text-lg block">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</span>
+          <p className="text-brand-text/90 font-serif italic text-sm sm:text-base leading-relaxed">
+            "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sungguh, pada yang demikian itu benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir."
+          </p>
+          <span className="text-[10px] sm:text-xs font-sans tracking-widest text-brand-outline font-semibold block uppercase">
+            — Q.S. Ar-Rum: 21
+          </span>
+          <div className="flex justify-center items-center space-x-2 py-4">
+            <div className="h-[1px] w-12 bg-brand-outline-variant"></div>
+            <Heart size={14} className="text-brand-secondary fill-brand-secondary" />
+            <div className="h-[1px] w-12 bg-brand-outline-variant"></div>
           </div>
-          <h3 className="font-alice text-3xl font-bold text-brand-primary">
-            Ryan Fahri
-          </h3>
-          <p className="font-sans text-xs text-brand-outline-variant italic mt-1 mb-3">
-            @ryanfahri
-          </p>
-          <p className="font-sans text-xs text-brand-outline leading-relaxed max-w-xs">
-            Putra dari Pasangan <br />
-            <span className="font-bold text-brand-text">Bapak Hari Soepranowo </span>
-            &amp;<span className="font-bold text-brand-text"> Ibu Siti Sarofah, M.Pd.</span>
-          </p>
         </motion.div>
 
-        {/* Bride Profile */}
-        <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-          className="flex flex-col items-center"
-        >
-          <div className="relative w-48 h-48 mb-6 group">
-            <div className="absolute inset-0 bg-brand-secondary-fixed/60 rounded-full -rotate-3 group-hover:-rotate-6 transition-transform"></div>
-            <div className="relative w-48 h-48 rounded-full overflow-hidden border-2 border-brand-primary p-1 bg-white hover:scale-105 transition-transform shadow-sm">
-              <img
-                alt="Arbaletta Kalinda D. P."
-                className="w-full h-full object-cover rounded-full scale-150"
-                src={galleryImages[23].url}
-                referrerPolicy="no-referrer"
-              />
-            </div>
-          </div>
-          <h3 className="font-alice text-3xl font-bold text-brand-primary">
-            Arbaletta Kalinda
+        {/* Intoduction Header */}
+        <div className="space-y-2">
+          <h3 className="text-xs sm:text-sm font-sans uppercase tracking-widest text-brand-primary font-medium">
+            Assalamu’alaikum Warahmatullahi Wabarakatuh
           </h3>
-          <p className="font-sans text-xs text-brand-outline-variant italic mt-1 mb-3">
-            @arbaletta.k
+          <p className="text-xs sm:text-sm font-serif text-brand-text/80 max-w-xl mx-auto">
+            Dengan memohon rahmat dan ridho Allah Subhanahu Wa Ta'ala, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri pernikahan putra-putri kami:
           </p>
-          <p className="font-sans text-xs text-brand-outline leading-relaxed max-w-xs">
-            Putri dari Pasangan <br />
-            <span className="font-bold text-brand-text">Bapak Dr. Arie Wahyu Prananta, M.Sos. </span>
-            &amp;<span className="font-bold text-brand-text"> Ibu Septi Wulan Mardaningsih, S.Pi.</span>
-          </p>
-        </motion.div>
+        </div>
+
+        {/* Bride & Groom Detail Cards */}
+        <div className="grid md:grid-cols-2 gap-12 pt-8 relative">
+          {/* Groom Details */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="flex flex-col items-center space-y-4"
+          >
+            {/* Groom Portrait Frame */}
+            <div className="relative group">
+              <div className="absolute -inset-1.5 bg-gradient-to-r from-brand-secondary-fixed to-brand-primary/40 rounded-2xl blur opacity-40 group-hover:opacity-60 transition duration-1000"></div>
+              <div className="relative w-52 h-72 rounded-2xl border-4 border-white overflow-hidden shadow-md">
+                <img
+                  src={galleryImages[17].url}
+                  alt="Ryan Fahri F."
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover object-center grayscale-[10%] hover:grayscale-0 transition-all duration-500"
+                />
+              </div>
+              <div className="absolute bottom-2 right-2 w-8 h-8 rounded-full bg-white border border-brand-outline-variant flex items-center justify-center text-brand-primary shadow-sm">
+                ✦
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h4 className="text-3xl font-script text-brand-primary-dark font-semibold">
+                Ryan Fahri F., S.T.
+              </h4>
+              <p className="text-xs font-sans text-brand-outline uppercase tracking-widest font-semibold">
+                — Ryan —
+              </p>
+              <div className="text-sm font-serif text-brand-text/90 space-y-0.5 pt-2">
+                <p>Putra pertama dari:</p>
+                <p className="font-semibold text-brand-text">Bapak H. Ferdiansyah, M.T.</p>
+                <p>&amp;</p>
+                <p className="font-semibold text-brand-text">Ibu Hj. Linda Farida</p>
+              </div>
+              <p className="text-xs text-brand-outline-variant italic">Asal: Bandung, Jawa Barat</p>
+            </div>
+          </motion.div>
+
+          {/* Decorative central heart & separator line */}
+          <div className="hidden md:flex flex-col items-center justify-center absolute left-1/2 top-12 bottom-12 -translate-x-1/2 text-brand-secondary">
+            <div className="h-full w-[1px] bg-gradient-to-b from-transparent via-brand-secondary/40 to-transparent"></div>
+            <Heart size={20} className="my-4 animate-pulse fill-brand-secondary/30 text-brand-secondary" />
+            <div className="h-full w-[1px] bg-gradient-to-b from-transparent via-brand-secondary/40 to-transparent"></div>
+          </div>
+
+          {/* Bride Details */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="flex flex-col items-center space-y-4"
+          >
+            {/* Bride Portrait Frame */}
+            <div className="relative group">
+              <div className="absolute -inset-1.5 bg-gradient-to-r from-brand-primary/40 to-brand-secondary-fixed rounded-2xl blur opacity-40 group-hover:opacity-60 transition duration-1000"></div>
+              <div className="relative w-52 h-72 rounded-2xl border-4 border-white overflow-hidden shadow-md">
+                <img
+                  src={galleryImages[23].url}
+                  alt="Arbaletta Kalinda D. P."
+                  referrerPolicy="no-referrer"
+                  className="w-full h-full object-cover object-center grayscale-[10%] hover:grayscale-0 transition-all duration-500"
+                />
+              </div>
+              <div className="absolute bottom-2 left-2 w-8 h-8 rounded-full bg-white border border-brand-outline-variant flex items-center justify-center text-brand-primary shadow-sm">
+                ✦
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h4 className="text-3xl font-script text-brand-primary-dark font-semibold">
+                Arbaletta Kalinda D. P., S.Kom.
+              </h4>
+              <p className="text-xs font-sans text-brand-outline uppercase tracking-widest font-semibold">
+                — Arba —
+              </p>
+              <div className="text-sm font-serif text-brand-text/90 space-y-0.5 pt-2">
+                <p>Putri bungsu dari:</p>
+                <p className="font-semibold text-brand-text">Bapak Dani Permana, S.E.</p>
+                <p>&amp;</p>
+                <p className="font-semibold text-brand-text">Ibu Arini Dian Lestari, S.Pd.</p>
+              </div>
+              <p className="text-xs text-brand-outline-variant italic">Asal: Jakarta Selatan, DKI Jakarta</p>
+            </div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

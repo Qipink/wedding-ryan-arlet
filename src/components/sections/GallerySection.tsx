@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "motion/react";
 import ParallaxImage from "../ui/ParallaxImage";
 import { galleryImages } from "../../utils/galleryData";

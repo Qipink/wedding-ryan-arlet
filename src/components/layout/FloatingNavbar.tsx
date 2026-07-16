@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "motion/react";
 import { Home, Calendar, Image as ImageIcon, Mail, MessageSquare } from "lucide-react";
 

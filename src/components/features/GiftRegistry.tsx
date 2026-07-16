@@ -71,7 +71,7 @@ export default function GiftRegistry() {
           animate={{ opacity: 1, y: 0 }}
           className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-lg mx-auto px-4 mt-6"
         >
-          {accounts.map((acc, index) => (
+          {accounts.map((acc) => (
             <div
               key={acc.accountNumber}
               className="bg-brand-surface-container-low border-2 border-brand-primary rounded-2xl p-6 relative flex flex-col justify-between text-left shadow-sm hover:rotate-1 transition-all duration-300"

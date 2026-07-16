@@ -1,8 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 import { RSVP, Wish } from "../types";
 
-const supabaseUrl = (import.meta as any).env.VITE_SUPABASE_URL || "";
-const supabaseAnonKey = (import.meta as any).env.VITE_SUPABASE_ANON_KEY || "";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 
 export const isSupabaseConfigured = !!(supabaseUrl && supabaseAnonKey);
 
@@ -10,7 +10,7 @@ if (!isSupabaseConfigured) {
   console.info(
     "%cSupabase Not Configured",
     "color: #ebd0d3; background: #591a22; padding: 4px 8px; border-radius: 4px; font-weight: bold;",
-    "Using localStorage fallback. To connect to Supabase, add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your env/secrets."
+    "Using localStorage fallback. To connect to Supabase, add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your env/secrets."
   );
 }
 
@@ -256,7 +256,7 @@ export const wishService = {
     if (supabase) {
       try {
         // Increment or decrement the likes count on Supabase
-        const { data, error } = await supabase.rpc("increment_likes", {
+        const { error } = await supabase.rpc("increment_likes", {
           wish_id: wishId,
           increment_value: incrementVal
         });
